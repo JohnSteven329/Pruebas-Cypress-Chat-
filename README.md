@@ -1,144 +1,143 @@
+Pruebas-Cypress-Chat
 
-Una aplicación de chat grupal desarrollada con **Next.js** y **FastAPI** que permite a los usuarios comunicarse en tiempo real con notificaciones push integradas.
+Una aplicación de chat grupal en tiempo real desarrollada con Next.js (Frontend) y FastAPI (Backend), complementada con Firebase para la mensajería y pruebas automatizadas E2E con Cypress.
 
+🚀 Descripción
 
-## 🛠️ Tecnologías
+Este proyecto demuestra la integración completa de una aplicación web moderna con arquitectura cliente-servidor, conectando un frontend interactivo con un backend en Python, y añadiendo un flujo automatizado de pruebas de extremo a extremo con Cypress para garantizar la calidad del sistema.
 
-### Frontend
-- **Next.js 14** - Framework de React
-- **TypeScript** - Tipado estático
-- **Tailwind CSS** - Estilos utilitarios
-- **Socket.IO Client** - Comunicación en tiempo real
-- **Lucide React** - Iconos
+⚙️ Tecnologías Utilizadas
+🧭 Frontend (Next.js + TypeScript)
 
-### Backend
-- **FastAPI** - Framework web de Python
-- **Socket.IO** - Comunicación bidireccional
-- **Firebase Admin SDK** - Firestore y Cloud Messaging
+Next.js 14 → Framework React para SSR y SPA.
 
+TypeScript → Tipado estático para mayor robustez.
 
-## 🔧 Instalación
+Tailwind CSS → Estilos utilitarios para diseño responsivo.
 
-### 1. Clonar el Repositorio
-```bash
-git clone <url-del-repositorio>
-cd CHAT-CON
-```
+Socket.IO Client → Comunicación en tiempo real.
 
-### 2. Configurar el Backend
+Lucide React → Librería de íconos moderna.
 
-```bash
-# Navegar al directorio del backend
+🧩 Backend (FastAPI + Firebase)
+
+FastAPI → Framework de alto rendimiento para APIs REST.
+
+Socket.IO → Comunicación bidireccional cliente-servidor.
+
+Firebase Admin SDK → Integración con Firestore y Cloud Messaging.
+
+🧠 Testing Automatizado
+
+Cypress → Pruebas End-to-End (E2E) que validan la funcionalidad del chat:
+
+Pantalla de inicio.
+
+Inicio de sesión en el chat.
+
+Escritura de mensajes sin enviarlos.
+
+Capturas automáticas durante el flujo.
+
+🧰 Instalación y Configuración
+🔹 1. Clonar el repositorio
+git clone https://github.com/JohnSteven329/Pruebas-Cypress-Chat-.git
+cd Pruebas-Cypress-Chat-
+
+🔹 2. Configurar el Backend
 cd backend
-
-# Crear entorno virtual (recomendado)
 python -m venv venv
+venv\Scripts\activate  # En Windows
+# o
+source venv/bin/activate  # En macOS/Linux
 
-# Activar entorno virtual
-# En Windows:
-venv\Scripts\activate
-# En macOS/Linux:
-source venv/bin/activate
-
-# Instalar dependencias
 pip install -r requirements.txt
 
-# Configurar variables de entorno
-# Crear archivo .env 
-# Editar .env con tus credenciales de Firebase
-# FIREBASE_PROJECT_ID=tu-proyecto-id
-# FIREBASE_PRIVATE_KEY=tu-private-key
-# etc.
-```
 
-### 3. Configurar el Frontend
+Crear el archivo .env con tus credenciales de Firebase:
 
-```bash
-# Navegar al directorio del frontend
-cd ../frontend
-
-# Instalar dependencias
-npm install
-# o con yarn:
-yarn install
-```
-
-## 🚀 Ejecutar la Aplicación
-
-### Iniciar el Backend
-
-```bash
-cd backend
-
-# Activar entorno virtual si no está activo
-source venv/bin/activate  # macOS/Linux
-# o
-venv\Scripts\activate     # Windows
-
-# Ejecutar el servidor
-python main.py
-```
-
-El backend estará disponible en: `http://localhost:8000`
-
-### Iniciar el Frontend
-
-```bash
-cd frontend
-
-# Ejecutar en modo desarrollo
-npm run dev
-# o con yarn:
-yarn dev
-```
-
-El frontend estará disponible en: `http://localhost:3000`
-
-## 📱 Uso de la Aplicación
-
-1. **Acceder** a `http://localhost:3000`
-2. **Ingresar tu nombre** en el formulario de entrada
-3. **Unirse al chat** haciendo clic en "Unirse al Chat"
-4. **Enviar mensajes** escribiendo en la caja de texto
-5. **Ver usuarios activos** en la lista lateral
-6. **Recibir notificaciones** cuando otros usuarios envíen mensajes
-
-### Configurar Variables de Entorno
-Completa el archivo `backend/.env` con los datos del archivo JSON:
-
-```env
 FIREBASE_PROJECT_ID=tu-proyecto-id
 FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 FIREBASE_CLIENT_EMAIL=firebase-adminsdk-...@tu-proyecto.iam.gserviceaccount.com
-# etc.
-```
 
-## 📁 Estructura del Proyecto
 
-```
-CHAT-CON/
-├── backend/                  # Servidor FastAPI
-│   ├── config/              # Configuraciones
-│   ├── models/              # Modelos de datos
-│   ├── repositories/        # Capa de datos
-│   ├── services/            # Lógica de negocio
-│   ├── routers/             # Endpoints API
-│   ├── observers/           # Patrón Observer
-│   ├── main.py              # Punto de entrada
-│   ├── requirements.txt     # Dependencias Python
-│   └── .env                 # Variables de entorno
+Ejecutar el servidor:
+
+python main.py
+
+
+Backend disponible en 👉 http://localhost:8000
+
+🔹 3. Configurar el Frontend
+cd ../frontend
+npm install
+npm run dev
+
+
+Frontend disponible en 👉 http://localhost:3000
+
+💬 Uso de la Aplicación
+
+Accede a http://localhost:3000
+
+Ingresa tu nombre en el formulario inicial
+
+Haz clic en “Entrar al Chat”
+
+Escribe y envía mensajes en tiempo real
+
+Observa usuarios conectados en la barra lateral
+
+🧪 Pruebas Automatizadas con Cypress
+
+El flujo E2E del chat SmartTalk se valida mediante el archivo:
+
+frontend/cypress/e2e/chat-tests/chat-flow-e2e.cy.js
+
+Escenarios Probados:
+
+✅ Validar la pantalla de inicio del chat
+
+✅ Ingreso con nombre
+
+✅ Escribir mensaje en el área de texto
+
+✅ Generar capturas automáticas en cada paso
+
+Ejecución:
+cd frontend
+npx cypress open
+
+
+Cypress abrirá su interfaz para seleccionar el test y visualizarlo en tiempo real.
+Las capturas se almacenan en:
+
+frontend/cypress/screenshots/
+
+🗂️ Estructura del Proyecto
+Pruebas-Cypress-Chat-/
+├── backend/
+│   ├── config/
+│   ├── models/
+│   ├── repositories/
+│   ├── routers/
+│   ├── services/
+│   ├── main.py
+│   ├── test_firebase.py
+│   ├── firebase_credentials.json
+│   ├── requirements.txt
+│   └── .env
 │
-├── frontend/                 # Aplicación Next.js
+├── frontend/
 │   ├── src/
-│   │   ├── components/      # Componentes React
-│   │   ├── hooks/           # Custom hooks
-│   │   ├── types/           # Definiciones TypeScript
-│   │   ├── utils/           # Utilidades
-│   │   └── app/             # Páginas Next.js
-│   ├── package.json         # Dependencias Node.js
-│   └── tailwind.config.js   # Configuración Tailwind
+│   ├── public/
+│   ├── cypress/
+│   │   ├── e2e/
+│   │   │   └── chat-tests/chat-flow-e2e.cy.js
+│   │   ├── fixtures/
+│   │   ├── screenshots/
+│   │   └── support/
+│   ├── package.json
+│   └── tailwind.config.js
 │
-└── README.md                # Este archivo
-```
-
-
+└── README.md
