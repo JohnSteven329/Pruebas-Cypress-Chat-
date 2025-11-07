@@ -1,12 +1,14 @@
 """
-Servicio de Firebase corregido sin operaciones async incorrectas
+Servicio de Firebase corregido para cargar credenciales desde el archivo .env
 """
 
 import os
+import json
 import logging
 from typing import List, Optional
 from datetime import datetime
 
+from dotenv import load_dotenv
 import firebase_admin
 from firebase_admin import credentials, firestore, messaging
 from firebase_admin.firestore import firestore as firestore_module
@@ -26,32 +28,52 @@ class FirebaseService:
         self._initialize()
     
     def _initialize(self):
-        """Inicializar Firebase Admin SDK."""
+        """Inicializar Firebase Admin SDK usando variables de entorno (.env)."""
         try:
-            # Verificar si ya hay una app inicializada
+            # Cargar las variables del archivo .env
+            load_dotenv()
+
+            project_id = os.getenv("FIREBASE_PROJECT_ID")
+            private_key = os.getenv("FIREBASE_PRIVATE_KEY").replace('\\n', '\n')
+            client_email = os.getenv("FIREBASE_CLIENT_EMAIL")
+
+            if not project_id or not private_key or not client_email:
+                logger.error("❌ No se encontraron las variables de entorno de Firebase")
+                return
+
+            # Crear un diccionario con las credenciales
+            firebase_config = {
+                "type": "service_account",
+                "project_id": project_id,
+                "private_key": private_key,
+                "client_email": client_email,
+                "token_uri": "https://oauth2.googleapis.com/token"
+            }
+
+            # Crear archivo temporal de credenciales en la carpeta backend
+            cred_path = os.path.join(os.getcwd(), "firebase_credentials.json")
+            with open(cred_path, "w") as f:
+                json.dump(firebase_config, f)
+
+            # Inicializar Firebase (solo si no está ya inicializado)
             if firebase_admin._apps:
                 self._app = firebase_admin.get_app()
             else:
-                # Inicializar desde archivo de credenciales
-                cred_path = './firebase-adminsdk.json'
-                if os.path.exists(cred_path):
-                    cred = credentials.Certificate(cred_path)
-                    self._app = firebase_admin.initialize_app(cred, {
-                        'databaseURL': os.getenv('FIREBASE_DATABASE_URL')
-                    })
-                else:
-                    logger.error("Firebase credentials file not found")
-                    return
-            
-            # Inicializar cliente Firestore
+                cred = credentials.Certificate(cred_path)
+                self._app = firebase_admin.initialize_app(cred)
+
             self._db = firestore.client(app=self._app)
             self._initialized = True
-            logger.info("Firebase initialized successfully")
-            
+            logger.info("✅ Firebase inicializado correctamente")
+
         except Exception as e:
-            logger.error(f"Failed to initialize Firebase: {e}")
+            logger.error(f"❌ Error al inicializar Firebase: {e}")
             self._initialized = False
-    
+
+    # --------------------------------------------------------
+    # MÉTODOS DE FIRESTORE
+    # --------------------------------------------------------
+
     def create_user(self, user: User) -> bool:
         """Crear usuario en Firestore (sincrónico)."""
         try:
@@ -69,7 +91,6 @@ class FirebaseService:
                 'last_seen': firestore_module.SERVER_TIMESTAMP
             }
             
-            # Operación síncrona
             self._db.collection('users').document(user.id).set(user_data)
             logger.info(f"User {user.name} created in Firestore")
             return True
@@ -118,7 +139,6 @@ class FirebaseService:
                 'created_at': firestore_module.SERVER_TIMESTAMP
             }
             
-            # Operación síncrona
             self._db.collection('messages').document(message.id).set(message_data)
             logger.info(f"Message {message.id} saved to Firestore")
             return True
@@ -134,14 +154,12 @@ class FirebaseService:
                 logger.info(f"Firebase not initialized. Would get messages for room: {room}")
                 return []
             
-            # Query síncrono
             messages_ref = self._db.collection('messages')\
                 .where('room', '==', room)\
                 .order_by('timestamp', direction=firestore.Query.DESCENDING)\
                 .limit(limit)
             
             docs = messages_ref.stream()
-            
             messages = []
             for doc in docs:
                 data = doc.to_dict()
@@ -156,7 +174,6 @@ class FirebaseService:
                 )
                 messages.append(message)
             
-            # Retornar en orden cronológico
             return list(reversed(messages))
             
         except Exception as e:
@@ -170,13 +187,11 @@ class FirebaseService:
                 logger.info(f"Firebase not initialized. Would get users for room: {room}")
                 return []
             
-            # Query síncrono
             users_ref = self._db.collection('users')\
                 .where('room', '==', room)\
                 .where('is_active', '==', True)
             
             docs = users_ref.stream()
-            
             users = []
             for doc in docs:
                 data = doc.to_dict()
