@@ -108,36 +108,5 @@ Ejecución:
 cd frontend
 npx cypress open
 
-
 Cypress abrirá su interfaz para seleccionar el test y visualizarlo en tiempo real.
-Las capturas se almacenan en:
-
-frontend/cypress/screenshots/
-
-🗂️ Estructura del Proyecto
-Pruebas-Cypress-Chat-/
-├── backend/
-│   ├── config/
-│   ├── models/
-│   ├── repositories/
-│   ├── routers/
-│   ├── services/
-│   ├── main.py
-│   ├── test_firebase.py
-│   ├── firebase_credentials.json
-│   ├── requirements.txt
-│   └── .env
-│
-├── frontend/
-│   ├── src/
-│   ├── public/
-│   ├── cypress/
-│   │   ├── e2e/
-│   │   │   └── chat-tests/chat-flow-e2e.cy.js
-│   │   ├── fixtures/
-│   │   ├── screenshots/
-│   │   └── support/
-│   ├── package.json
-│   └── tailwind.config.js
-│
-└── README.md
+Las capturas se almacenan en:frontend/cypress/screenshots/
